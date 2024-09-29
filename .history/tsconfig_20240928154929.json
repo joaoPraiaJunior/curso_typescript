@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "target": "ES2022", // versão do Js que será convertida
+    "outDir": "./dist/js/", // pasta de destino do Js convertido
+    "noEmitOnError": true // não compila se houver erro
+  },
+  "include": ["./src/**/*"] // pasta de origem dos arquivos TS
+}

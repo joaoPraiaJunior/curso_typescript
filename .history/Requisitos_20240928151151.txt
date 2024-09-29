@@ -14,5 +14,3 @@ npm install -g typescript - caso nao, instale
 Para gerar o arquivo Js a partir do typescript
 tsc bytebank.ts 
 
-Depois que criar o tsconfig.json utilizar o comando tsc -w para monitorar e salvar automaticamente assim que o arquivo é atualizado.
-
