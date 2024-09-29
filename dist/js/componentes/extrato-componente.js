@@ -1,6 +1,6 @@
-import conta from "../tipos/Conta.js";
-import { FormatoData } from "../tipos/FormatoData.js";
-import { formatarData, formatarMoeda } from "../uteis/formatadores.js";
+import conta from '../tipos/Conta.js';
+import { FormatoData } from '../tipos/FormatoData.js';
+import { formatarData, formatarMoeda } from '../uteis/formatadores.js';
 const elementos = {
     extrato: '[data-js="extrato"]',
 };
@@ -8,9 +8,9 @@ const elementoRegistroDeTransacoesExtrato = document.querySelector(elementos.ext
 renderizarExtrato();
 function renderizarExtrato() {
     const gruposTransacoes = conta.pegaGruposTransacoes();
-    let htmlRegistroDeTransacoes = "";
+    let htmlRegistroDeTransacoes = '';
     for (let grupoTransacao of gruposTransacoes) {
-        let htmlTransacaoItem = "";
+        let htmlTransacaoItem = '';
         for (let transacao of grupoTransacao.transacoes) {
             htmlTransacaoItem += `
         <div class="transacao-item">
@@ -29,7 +29,7 @@ function renderizarExtrato() {
     </div>
 `;
     }
-    if (htmlRegistroDeTransacoes === "") {
+    if (htmlRegistroDeTransacoes === '') {
         htmlRegistroDeTransacoes = `<p class="transacao-item sem-transacao">Nenhuma transação realizada</p>`;
     }
     elementoRegistroDeTransacoesExtrato.innerHTML = htmlRegistroDeTransacoes;
