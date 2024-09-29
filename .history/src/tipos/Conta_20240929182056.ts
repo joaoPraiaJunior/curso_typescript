@@ -1,22 +1,17 @@
-import { Armazenador } from "./Armazenador.js";
-import { ValidaDebito, ValidaDeposito } from "./Decorators.js";
 import { GrupoTransacao } from "./GruposTransacoes.js";
 import { TipoTransacao } from "./TipoTransacao.js";
 import { Transacao } from "./Transacao.js";
 
 export class Conta {
-  protected nome: string;
-  protected saldo: number = Armazenador.obter<number>("saldo") || 0;
+  nome: string;
+  private saldo: number = JSON.parse(localStorage.getItem("saldo") || "0");
   private transacoes: Transacao[] =
-    Armazenador.obter<Transacao[]>(
-      "transacoes",
-      (key: string, value: string) => {
-        if (key === "data") {
-          return new Date(value);
-        }
-        return value;
+    JSON.parse(localStorage.getItem("transacoes"), (chave, valor) => {
+      if (chave === "data") {
+        return new Date(valor);
       }
-    ) || [];
+      return valor;
+    }) || [];
 
   constructor(nome: string) {
     this.nome = nome;
@@ -60,16 +55,25 @@ export class Conta {
     return new Date();
   }
 
-  @ValidaDebito
   debitarSaldo(valor: number): void {
+    if (valor <= 0) {
+      throw new Error("O valor a ser debitado deve ser maior que zero!");
+    }
+
+    if (valor > this.saldo) {
+      throw new Error("Saldo insuficiente!");
+    }
+
     this.saldo -= valor;
-    Armazenador.salvar("saldo", this.saldo.toString());
+    localStorage.setItem("saldo", this.saldo.toString());
   }
 
-  @ValidaDeposito
   depositarSaldo(valor: number): void {
+    if (valor <= 0) {
+      throw new Error("O valor a ser depositado deve ser maior que zero!");
+    }
     this.saldo += valor;
-    Armazenador.salvar("saldo", this.saldo.toString());
+    localStorage.setItem("saldo", this.saldo.toString());
   }
 
   registrarTransacao(novaTransacao: Transacao): void {
@@ -93,21 +97,10 @@ export class Conta {
 
     this.transacoes.push(novaTransacao);
     console.log(this.pegaGruposTransacoes());
-    Armazenador.salvar("transacoes", JSON.stringify(this.transacoes));
-  }
-}
-
-export class ContaPremium extends Conta {
-  registrarTransacao(transacao: Transacao): void {
-    if (transacao.tipoTransacao === TipoTransacao.DEPOSITO) {
-      console.log("ganhou um bônus de 0.50 centavos");
-      transacao.valor += 0.5;
-    }
-    super.registrarTransacao(transacao);
+    localStorage.setItem("transacoes", JSON.stringify(this.transacoes));
   }
 }
 
 const conta = new Conta("João Praia Junior");
-const contaPremium = new ContaPremium("Ruth Praia");
 
 export default conta;
